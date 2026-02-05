@@ -1,18 +1,34 @@
 import streamlit as st
 from chatbot_functies import chatbot_response
 
-st.title("🤖 Mijn AI Assistent 🤖")
-st.markdown("Een AI bot met python")
-form = st.form(key="user_settings")
-with form:
-    AI_concept = st.text_input("Voer het AI-concept in dat je wilt leren:", key = "AI_concept")
-    role = st.selectbox("Voor welk publiek wil je het uitgelegd hebben?",
-                          ("Expert",
-                           "Leek", "12-jarig kind"),)
-    generate_button = form.form_submit_button("Leg AI-concept uit")
-    if generate_button:
-        with st.spinner('Even geduld...'):
-            PROMPT = f"""Leg het AI-concept {AI_concept} bondig uit aan iemand met de ervaring van een {role} op het gebied van kunstmatige intelligentie.
-            Geef geen antwoord als het concept niet gerelateerd is aan AI. Antwoord in het Nederlands."""
-            response = chatbot_response(PROMPT)
-        st.write(response)
+st.set_page_config(
+    page_title="Lady Whistledown",
+    page_icon="",
+    layout="centered"
+)
+
+# Titel en uitleg
+st.markdown("<h1 style='text-align: center; color: #ff69b4;'>Lady Whistledown</h1>")
+st.markdown("<p style='text-align: center; color: #ffb6c1; font-size:16px;'>")
+st.markdown("Chat with the most mysterious writers of the ton")
+
+
+# input
+with st.form(key="ai_form"):
+    AI_concept = st.text_input("Ask Lady Whistledown anything you would like to know:")
+    role = st.selectbox("For which audience should it be explained?",
+                        ("Colin Bridgerton, Her husband", "A kind reader"))
+    submit = st.form_submit_button("Let Lady Whistledown explain")
+
+# output
+if submit and AI_concept.strip():
+    with st.spinner("Lady Whistledown is writing..."):
+        prompt = f"""
+                    You are a society columnist from the Regency era (Lady Whistledown).
+                    Explain what the asker wants but keep in mind who the reader is in '{role}'.
+                    Write elegantly, dramatically, and a little sarcastically, just like Lady Whistledown in Bridgerton.
+                    Answer in English.
+                    """
+        antwoord = chatbot_response(prompt)
+    st.markdown(f"Dearest Gentle Reader")
+    st.write(antwoord)
